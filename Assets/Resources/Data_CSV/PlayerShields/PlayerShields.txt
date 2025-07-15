@@ -1,0 +1,20 @@
+{
+    "shields" : [
+        {
+            "Name" : "Default",
+            "ShieldSprite" : "default",
+            "Duration" : 1.8,
+            "Hitpoints" : 5,
+            "Cooldown" : 5,
+            "InvincibilityTime" : 0
+        },
+        {
+            "Name" : "Petrified",
+            "ShieldSprite" : "default",
+            "Duration" : 0.5,
+            "Hitpoints" : 100,
+            "Cooldown" : 5,
+            "InvincibilityTime" : 0
+        }
+    ]
+}

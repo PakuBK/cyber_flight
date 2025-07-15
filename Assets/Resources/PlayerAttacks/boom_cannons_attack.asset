@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b3742d9614949941b98e83ae8de3a7c, type: 3}
+  m_Name: boom_cannons_attack
+  m_EditorClassIdentifier: 
+  DisplayName: Booms
+  BulletsPerAttack: 1
+  BulletTimer: 0.4
+  Damage: 1
+  RandomSize: 0
+  RandomOffset: 0
+  RandomSpeed: 0
+  RandomDirection: 0
+  Intervall: 0
+  IntervallThreshold: 0
+  IntervallTime: 0
+  BulletSpeed: 20
+  MinBulletSpeed: 0
+  MaxBulletSpeed: 0
+  BulletSize: 1
+  MinBulletSize: 0
+  MaxBulletSize: 0
+  FixedOffset: 1
+  OffsetMultiplier: 0.29
+  Direction: {x: 0, y: 1}
+  MinDirectionX: 0
+  MaxDirectionX: 0
+  BulletSprite: {fileID: 5898161366690267188, guid: b9352b2a6cb8ead47910407bf43c8866, type: 3}
+  IconSprite: {fileID: 21300000, guid: d7b5b0f5c05f6a547bbb82e06a2ee366, type: 3}
+  GlowColor: {r: 1.6169825, g: 8, b: 0, a: 1}
+  Attack_SFX: 03000000

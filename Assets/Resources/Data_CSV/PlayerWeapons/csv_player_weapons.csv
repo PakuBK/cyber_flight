@@ -1,0 +1,3 @@
+Name,DisplayName,BPA,BulletTimer,Damage,RandomSize,RandomOffset,RandomSpeed,RandomDir,Intervall,InvallThreshold,InvallTime,BulletSpeed,MinBulletSpeed,MaxBulletSpeed,BulletSize,MinBulletSize,MaxBulletSize,FixedOffset,OffsetMultiplier,DirectionX,MinDirX,MaxDirX,SpriteName
+rusty_cannons,Rusty Cannons,1,0.4,1,FALSE,FALSE,FALSE,FALSE,FALSE,0,0,15,0,0,1,0,0,TRUE,0.29,0,0,0,bullet_rooster_15
+boom_cannons,Booms,2,0.4,1,FALSE,FALSE,FALSE,FALSE,FALSE,0,0,15,0,0,1,0,0,TRUE,0.29,0,0,0,bullet_rooster_15

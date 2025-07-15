@@ -1,0 +1,43 @@
+{
+    "specials" : [
+        {
+            "Name" : "Default",
+            "Homing" : "False",
+            "Type" : 0,
+            "SpecialDuration" : 1,
+            "ShootAfterSpecialCooldown" : 0,
+            "Speed" : 12,
+            "Damage" : 3,
+            "Cooldown" : 5,
+            "Size" : 3,
+            "Direction" : 0,
+            "SpritePath" : "Textures/PlayerSpecials/Sprites/damage_sprite"
+        },
+        {
+            "Name" : "Slower",
+            "Homing" : "True",
+            "Type" : 2,
+            "SpecialDuration" : 3,
+            "ShootAfterSpecialCooldown" : 0,
+            "Speed" : 10,
+            "Damage" : 3,
+            "Cooldown" : 4,
+            "Size" : 2,
+            "Direction" : 0,
+            "SpritePath" : "Textures/PlayerSpecials/Sprites/slow_sprite"
+        },
+        {
+            "Name" : "Stunner",
+            "Homing" : "False",
+            "Type" : 1,
+            "SpecialDuration" : 2,
+            "ShootAfterSpecialCooldown" : 0,
+            "Speed" : 8,
+            "Damage" : 1,
+            "Cooldown" : 5,
+            "Size" : 3,
+            "Direction" : 0,
+            "SpritePath" : "Textures/PlayerSpecials/Sprites/stun_sprite"
+        }
+    ]
+}

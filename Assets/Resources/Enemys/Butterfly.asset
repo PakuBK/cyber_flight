@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3586ed27a69fdeb418c084f4f22c4b2f, type: 3}
+  m_Name: Butterfly
+  m_EditorClassIdentifier: 
+  Name: Butterfly
+  Icon: {fileID: 21300000, guid: 853b1c43e7a9a094a8db840ceb1664b9, type: 3}
+  Health: 25
+  MoveSpeed: 12
+  IdleTime: 0.25
+  ShardsMin: 5
+  ShardsMax: 10
+  FragmentTier: 0
+  FragmentAmount: 2
+  PlayerFocusWeight: 15
+  AttackProbabilty: 50
+  IdleAnim: {fileID: 7400000, guid: 8db3af4f281fac942927e6dbf5b399cc, type: 2}
+  MoveAnim: {fileID: 7400000, guid: 8db3af4f281fac942927e6dbf5b399cc, type: 2}
+  DeathAnim: {fileID: 7400000, guid: 4d964438910e9e149a371c16b25e4ff4, type: 2}
+  EntryClip: {fileID: 7400000, guid: 64e2068900f417745ac63fa6c1a877fd, type: 2}
+  AttackClip: {fileID: 7400000, guid: cab9cf38c77a19643bd911422f0643c8, type: 2}
+  ExitClip: {fileID: 7400000, guid: 3b000c99c6bf32a45ba9db8916f624e8, type: 2}
+  HitColor: {r: 1, g: 1, b: 1, a: 1}
+  Attacks:
+  - {fileID: 11400000, guid: 376a6a14048d9ba4d8e382af1e047a0a, type: 2}
+  - {fileID: 11400000, guid: 958cf74a646e8d14eb77e06adcae28b7, type: 2}
+  - {fileID: 11400000, guid: cfc5e6234064d6346aef1f3ee7dc5609, type: 2}

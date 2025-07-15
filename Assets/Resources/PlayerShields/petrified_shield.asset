@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 055b16a0a11257e449bd47e0df086890, type: 3}
+  m_Name: petrified_shield
+  m_EditorClassIdentifier: 
+  Name: Petrified
+  IconSprite: {fileID: 21300000, guid: 6a8262a087ec3df438a2eaa3f37a13c8, type: 3}
+  Duration: 0.5
+  Hitpoints: 100
+  Cooldown: 5
+  InvincibilityTime: 0
+  shieldEntry: {fileID: 7400000, guid: 82ba331beae0ca44d970b18e592a8978, type: 2}
+  shieldOn: {fileID: 7400000, guid: aca3ccd69d01a2546b0b4d4abd6afa98, type: 2}
+  shieldHit: {fileID: 7400000, guid: f78594ad75a733f4988b3cc6a2df7fd8, type: 2}
+  shieldExit: {fileID: 7400000, guid: 55b2bb0d72a63164ab4b3875a8b16daf, type: 2}
