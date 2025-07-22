@@ -137,6 +137,22 @@ public class UIController : MonoBehaviour
         Invoke("CloseVersusUI", 1.5f);
     }
 
+    public void ShowVersusUI(Sprite enemyIcon, Sprite playerIcon, string enemyName, System.Action onComplete = null)
+    {
+        VersusPlayer.sprite = playerIcon;
+        VersusEnemy.sprite = enemyIcon;
+
+        VersusUI.SetActive(true);
+
+        VersusUI.GetComponent<Animator>().Play("enter");
+
+        VersusTitle.text = enemyName;
+
+        // Play animation...
+        // At the end of the animation:
+        onComplete?.Invoke();
+    }
+
     private void CloseVersusUI()
     {
         VersusUI.GetComponent<Animator>().Play("exit");

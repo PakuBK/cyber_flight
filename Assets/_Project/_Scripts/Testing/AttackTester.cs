@@ -17,12 +17,12 @@ public class AttackTester : MonoBehaviour
     }
 
     private void Attack(){
-        if (bulletsShot >= enemyAttackData.AmountOfRainBullets) // Exit Attack
+        if (bulletsShot >= enemyAttackData.AmountOfBullets) // Exit Attack
         {
             attackFinished = true;
         }
 
-        if (Time.time >= startTime + enemyAttackData.BulletRainTimer) // Attack
+        if (Time.time >= startTime + enemyAttackData.TimeBetweenBullets) // Attack
         {
             startTime = Time.time;
             bulletsShot++;

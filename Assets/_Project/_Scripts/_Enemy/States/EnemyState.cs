@@ -1,76 +1,41 @@
 using UnityEngine;
 
 namespace CF.Enemy {
-public class EnemyState
-{
-    protected EnemyBrain brain;
-    protected EnemyStateMachine stateMachine;
-    protected float startTime;
-    protected string animName;
-
-    protected bool lockState;
-
-    public EnemyState(EnemyBrain _brain, EnemyStateMachine _stateMachine)
+    public class EnemyState
     {
-        brain = _brain;
-        stateMachine = _stateMachine;
+        protected EnemyContext context => stateMachine.context;
+        protected EnemyStateMachine stateMachine;
 
-    }
-
-    public virtual void Enter()
-    {
-        startTime = Time.time;
-
-        if (!brain.isStunded)
+        public EnemyState(EnemyStateMachine stateMachine)
         {
-            LockState(false);
+            this.stateMachine = stateMachine;
         }
-    }
 
-    public virtual void Exit() 
-    {
+        public virtual void Enter()
+        {
         
-    }
-
-    public virtual void LogicUpdate() 
-    {
-        if (brain.isStunded)
-        {
-            brain.FlashColorEffect(Color.magenta);
-
-            LockState(true);
-
-            if (Time.time > brain.specialStartTime + brain.specialTime)
-            {
-                brain.StunEnemy(false);
-                LockState(false);
-                brain.spriteRenderer.color = Color.white;
-            }
         }
 
-        if (brain.IsSlowed)
+        public virtual void Exit() 
         {
-            if (Time.time > brain.specialStartTime + brain.specialTime)
-            {
-                brain.SlowEnemy(false);
-            }
-        }
-
-    }
-
-    public virtual void PhysicsUpdate() 
-    {
         
-    }
+        }
 
-    protected virtual void PlayAnim(string _name)
-    {
-        brain.Anim.Play(_name);
-    }
+        public virtual void LogicUpdate() 
+        {
+        
+        }
 
-    public void LockState(bool _state)
-    {
-        lockState = _state;
-    }
+        public virtual void PhysicsUpdate() 
+        {
+        
+        }
+
+        protected virtual void PlayAnim(string _name)
+        {
+        
+        }
+
+  
 }
 }

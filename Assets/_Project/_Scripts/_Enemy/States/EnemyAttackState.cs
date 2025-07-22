@@ -1,164 +1,110 @@
 using UnityEngine;
 using CF.Data;
 using CF.Audio;
+using System.Collections;
 
 namespace CF.Enemy {
-public class EnemyAttackState : EnemyState
-{
-    private EnemyData enemyData;
-
-    private EnemyAttackData currentPreset;
-
-    private int currentAmountOfRainBullets;
-    private bool canAttack;
-
-    
-
-    public EnemyAttackState(EnemyBrain _brain, EnemyStateMachine _stateMachine) : base(_brain, _stateMachine)
+    public class EnemyAttackState : EnemyState
     {
-        enemyData = brain.Data;
-    }
+        private EnemyAttackData attackData;
+        private float telegraphStartTime;
+        private bool telegraphDone;
+        private bool attackDone;
+        private bool attackStarted;
 
-    #region State Logic
+        public EnemyAttackState(EnemyStateMachine stateMachine) : base(stateMachine) {}
 
-    public override void Enter()
-    {
-        base.Enter();
-        currentPreset = SelectRandomPreset();
+        public override void Enter()
+        {
+            base.Enter();
+            attackData = selectWeightedAttack(); ; // Get from enemy's attack set
+            telegraphStartTime = Time.time;
+            telegraphDone = false;
+            attackDone = false;
+            attackStarted = false;
 
-        if (currentPreset.OneColorForAll) {
-            foreach (var bullet in currentPreset.Bullets)
+
+            // Play telegraph animation/SFX
+            // If using Animancer, register OnTelegraphFinished callback
+        }
+
+        public override void LogicUpdate()
+        {
+            base.LogicUpdate();
+
+            // Telegraph phase -> later with Animacer or animation events
+            if (!telegraphDone)
             {
-                bullet.GlowColor = currentPreset.AllBulletsColor;
+                if (Time.time >= telegraphStartTime + attackData.TelegraphDuration) // Or use animation event
+                {
+                    telegraphDone = true;
+                }
+                return; // Wait for telegraph to finish
             }
-        }
 
-        startTime = Time.time;
-        currentAmountOfRainBullets = 0;
-        enemyData = brain.Data;
-
-        PlayAnim(brain.Data.EntryClip.name);
-    }
-
-    public override void LogicUpdate()
-    {
-        base.LogicUpdate();
-        if (lockState) return;
-
-        if (canAttack)
-        {
-            Attack();
-        }
-    }
-
-    public override void Exit() 
-    {
-        base.Exit();
-        canAttack = false;
-    }
-
-    private void Attack()
-    {
-        brain.enemyMaterial.SetFloat("_GlowScale", 1f);
-        if (currentAmountOfRainBullets >= currentPreset.AmountOfRainBullets) // Exit Attack
-        {
-            canAttack = false;
-            brain.enemyMaterial.SetFloat("_GlowScale", 0f);
-            PlayAnim(brain.Data.ExitClip.name);
-            return;
-        }
-
-        if (Time.time >= startTime + currentPreset.BulletRainTimer) // Attack
-        {
-            startTime = Time.time;
-            currentAmountOfRainBullets++;
-            //ObjectPooler.Current.CreateEnemyBullet(currentPreset, brain.transform.position);
-            /*
-            foreach (BulletData bullet in currentPreset.Bullets)
+            // Attack phase, only starts once telegraph is done
+            if (!attackDone && !attackStarted)
             {
-                bullet.FromEnemy = true;
-                ObjectPooler.Current.InstantiateBullet(bullet, brain.transform.position);
-            }
-            */
-            
-            ObjectPooler.Current.InstantiateBulletsDelayed(currentPreset.Bullets, brain.transform, true);
-            PlayAttackSFX();
-        }
-    }
-    #endregion
-
-    private EnemyAttackData SelectRandomPreset()
-    {
-        var attacks = brain.Data.Attacks;
-
-        float sum_weight = 0;
-
-        var weight_attacks = new float[attacks.Length];
-
-        for (int i = 0; i < attacks.Length; i++)
-        {
-            var adjusted_weight = attacks[i].Weight;
-            foreach(var offset in attacks[i].AttackTargetOffset){
-                if (brain.PlayerController.CurrentLane == brain.currentLane + offset) {
-                    adjusted_weight *= 3;
-                    break;
+                attackStarted = true;
+                if (attackData.AttackType == EnemyAttackType.Laser)
+                {
+                    Debug.Log("Placeholder: Laser Attack Started");
+                    context.StartCoroutine(LaserAttackCoroutine(attackData.LaserDuration));
+                }
+                else if (attackData.AttackType == EnemyAttackType.Bullet)
+                {
+                    ObjectPooler.Current.InstantiateBulletsDelayed(attackData.Bullets,
+                        context.transform,
+                        () => { attackDone = true; },
+                        true
+                    );
                 }
             }
-            
-            sum_weight += adjusted_weight;
-            
 
-            weight_attacks[i] = sum_weight;
-        }
-
-        float randomFloat = Random.Range(0f, sum_weight);
-
-        for (int i = 0; i < attacks.Length; i++)
-        {
-            if (weight_attacks[i] >= randomFloat)
+            // Exit when attack is done
+            if (attackDone)
             {
-                return attacks[i];
+                Exit();
+                stateMachine.EnterState(EnemyStateType.Idle);
             }
         }
 
-        Debug.LogError("Error in Random Bullet Selection");
-
-        return null;
-
-    }
-
-
-
-    #region Animation
-    public void EntryAnimTrigger()
-    {
-        canAttack = true;
-        PlayAnim(brain.Data.AttackClip.name);
-    }
-
-    public void ExitAnimTrigger() => TransitionToIdle();
-
-    public void TransitionToIdle(){
-        Debug.Log("trans to idle");
-        stateMachine.ChangeState(brain.IdleState);
-    }
-
-    #endregion
-
-    #region Sound
-    private void PlayAttackSFX()
-    {
-        if (currentPreset.AttackSFX.Length == 0)
+        public override void Exit() 
         {
-            AudioController.Current.PlayAudioOnTop(AudioOfType.SFX_Enemy_Weapon_01);
+            base.Exit();
         }
-        else {
-            var clip = currentPreset.AttackSFX[Random.Range(0, currentPreset.AttackSFX.Length)];
-            AudioController.Current.PlayAudioOnTop(clip);
-        }
-        
-    }
 
-    #endregion
-}
+        private IEnumerator LaserAttackCoroutine(float duration)
+        {
+            yield return new WaitForSeconds(duration);
+            attackDone = true;
+            Debug.Log("Placeholder: Laser Attack Finished");
+        }
+
+        private EnemyAttackData selectWeightedAttack()
+        {
+            EnemyAttackData[] attacks = context.enemyData.Attacks;
+            float totalWeight = 0f;
+
+            foreach (var attack in attacks)
+            {
+                totalWeight += attack.Weight;
+            }
+
+            float randomValue = Random.Range(0f, totalWeight);
+
+            foreach (var attack in attacks)
+            {
+                if (randomValue < attack.Weight)
+                {
+                    return attack;
+                }
+                randomValue -= attack.Weight;
+            }
+
+            Debug.LogError("Error in weighted attack selection");
+            return null;
+        }
+
+    }
 }
