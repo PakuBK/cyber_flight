@@ -1,164 +1,259 @@
 using UnityEngine;
 using CF.Data;
 using CF.Audio;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CF.Enemy {
-public class EnemyAttackState : EnemyState
-{
-    private EnemyData enemyData;
-
-    private EnemyAttackData currentPreset;
-
-    private int currentAmountOfRainBullets;
-    private bool canAttack;
-
-    
-
-    public EnemyAttackState(EnemyBrain _brain, EnemyStateMachine _stateMachine) : base(_brain, _stateMachine)
+    public class EnemyAttackState : EnemyState
     {
-        enemyData = brain.Data;
-    }
+        private EnemyAttackData attackData;
+        private float telegraphStartTime;
+        private bool telegraphDone;
+        private bool attackDone;
+        private bool attackStarted;
 
-    #region State Logic
+        public EnemyAttackState(EnemyStateMachine stateMachine) : base(stateMachine) {}
 
-    public override void Enter()
-    {
-        base.Enter();
-        currentPreset = SelectRandomPreset();
+        public override void Enter()
+        {
+            Debug.Log("EnemyAttackState: Entering Attack State");
+            base.Enter();
 
-        if (currentPreset.OneColorForAll) {
-            foreach (var bullet in currentPreset.Bullets)
+            // Select attack based on the enemy's attack selection mode 
+            if (context.enemyData.AttackSelectionMode == AttackSelectionMode.WeighedRandom)
             {
-                bullet.GlowColor = currentPreset.AllBulletsColor;
+                attackData = SelectWeightedRandomAttack();
             }
-        }
-
-        startTime = Time.time;
-        currentAmountOfRainBullets = 0;
-        enemyData = brain.Data;
-
-        PlayAnim(brain.Data.EntryClip.name);
-    }
-
-    public override void LogicUpdate()
-    {
-        base.LogicUpdate();
-        if (lockState) return;
-
-        if (canAttack)
-        {
-            Attack();
-        }
-    }
-
-    public override void Exit() 
-    {
-        base.Exit();
-        canAttack = false;
-    }
-
-    private void Attack()
-    {
-        brain.enemyMaterial.SetFloat("_GlowScale", 1f);
-        if (currentAmountOfRainBullets >= currentPreset.AmountOfRainBullets) // Exit Attack
-        {
-            canAttack = false;
-            brain.enemyMaterial.SetFloat("_GlowScale", 0f);
-            PlayAnim(brain.Data.ExitClip.name);
-            return;
-        }
-
-        if (Time.time >= startTime + currentPreset.BulletRainTimer) // Attack
-        {
-            startTime = Time.time;
-            currentAmountOfRainBullets++;
-            //ObjectPooler.Current.CreateEnemyBullet(currentPreset, brain.transform.position);
-            /*
-            foreach (BulletData bullet in currentPreset.Bullets)
+            else if (context.enemyData.AttackSelectionMode == AttackSelectionMode.RandomAmongValid)
             {
-                bullet.FromEnemy = true;
-                ObjectPooler.Current.InstantiateBullet(bullet, brain.transform.position);
+                attackData = SelectRandomAmongValidAttack();
             }
-            */
+            else if (context.enemyData.AttackSelectionMode == AttackSelectionMode.WeightedRandomAmongValid)
+            {
+                attackData = SelectWeightedRandomAmongValidAttack();
+            }
+            else if (context.enemyData.AttackSelectionMode == AttackSelectionMode.FirstValidByWeight)
+            {
+                attackData = SelectFirstValidAttackByWeight();
+            }
+            else
+            {
+                Debug.LogError("Invalid attack selection mode!");
+                stateMachine.EnterState(EnemyStateType.Idle);
+                return;
+            }
+
+            if (attackData == null)
+            {
+                Debug.LogError("No valid attack data found for enemy!");
+                stateMachine.EnterState(EnemyStateType.Idle);
+                return;
+            }
+
+            telegraphStartTime = Time.time;
+            telegraphDone = false;
+            attackDone = false;
+            attackStarted = false;
+
             
-            ObjectPooler.Current.InstantiateBulletsDelayed(currentPreset.Bullets, brain.transform, true);
-            PlayAttackSFX();
+
+            // Play telegraph animation/SFX
+            // If using Animancer, register OnTelegraphFinished callback
         }
-    }
-    #endregion
 
-    private EnemyAttackData SelectRandomPreset()
-    {
-        var attacks = brain.Data.Attacks;
-
-        float sum_weight = 0;
-
-        var weight_attacks = new float[attacks.Length];
-
-        for (int i = 0; i < attacks.Length; i++)
+        public override void LogicUpdate()
         {
-            var adjusted_weight = attacks[i].Weight;
-            foreach(var offset in attacks[i].AttackTargetOffset){
-                if (brain.PlayerController.CurrentLane == brain.currentLane + offset) {
-                    adjusted_weight *= 3;
-                    break;
+            base.LogicUpdate();
+
+            // Check for stun, transition to interrupt state if stunned
+            if (context.HasActiveEffect(StatusEffect.Stunned))
+            {
+                base.Exit();
+                stateMachine.EnterState(EnemyStateType.Interrupt);
+                return;
+            }
+
+            // Telegraph phase -> later with Animacer or animation events
+            if (!telegraphDone)
+            {
+                if (Time.time >= telegraphStartTime + attackData.TelegraphDuration) // Or use animation event
+                {
+                    telegraphDone = true;
+                }
+                return; // Wait for telegraph to finish
+            }
+
+            // Attack phase, only starts once telegraph is done
+            if (!attackDone && !attackStarted)
+            {
+                attackStarted = true;
+                if (attackData.AttackType == EnemyAttackType.Laser)
+                {
+                    Debug.Log("Placeholder: Laser Attack Started");
+                    context.StartCoroutine(LaserAttackCoroutine(attackData.LaserDuration));
+                }
+                else if (attackData.AttackType == EnemyAttackType.Bullet)
+                {
+                    ObjectPooler.Current.InstantiateBulletsDelayed(attackData.Bullets,
+                        context.transform,
+                        () => { attackDone = true; },
+                        true
+                    );
                 }
             }
-            
-            sum_weight += adjusted_weight;
-            
 
-            weight_attacks[i] = sum_weight;
-        }
-
-        float randomFloat = Random.Range(0f, sum_weight);
-
-        for (int i = 0; i < attacks.Length; i++)
-        {
-            if (weight_attacks[i] >= randomFloat)
+            // Exit when attack is done
+            if (attackDone)
             {
-                return attacks[i];
+                Exit();
+                stateMachine.EnterState(EnemyStateType.Idle);
             }
         }
 
-        Debug.LogError("Error in Random Bullet Selection");
-
-        return null;
-
-    }
-
-
-
-    #region Animation
-    public void EntryAnimTrigger()
-    {
-        canAttack = true;
-        PlayAnim(brain.Data.AttackClip.name);
-    }
-
-    public void ExitAnimTrigger() => TransitionToIdle();
-
-    public void TransitionToIdle(){
-        Debug.Log("trans to idle");
-        stateMachine.ChangeState(brain.IdleState);
-    }
-
-    #endregion
-
-    #region Sound
-    private void PlayAttackSFX()
-    {
-        if (currentPreset.AttackSFX.Length == 0)
+        public override void Exit() 
         {
-            AudioController.Current.PlayAudioOnTop(AudioOfType.SFX_Enemy_Weapon_01);
+            base.Exit();
         }
-        else {
-            var clip = currentPreset.AttackSFX[Random.Range(0, currentPreset.AttackSFX.Length)];
-            AudioController.Current.PlayAudioOnTop(clip);
-        }
-        
-    }
 
-    #endregion
-}
+        private IEnumerator LaserAttackCoroutine(float duration)
+        {
+            yield return new WaitForSeconds(duration);
+            attackDone = true;
+            Debug.Log("Placeholder: Laser Attack Finished");
+        }
+
+        /// <summary>
+        /// If the attack selection mode is WeightedRandomAmongValid, this method will select a random attack that can hit the player based on weights.
+        /// </summary>
+        /// <returns>Randomly selected attack based weights from valid attacks</returns>
+        private EnemyAttackData SelectWeightedRandomAmongValidAttack()
+        {
+            List<EnemyAttackData> validAttacks = context.enemyData.Attacks
+                .Where(a => WillAttackHit(a))
+                .ToList();
+            if (validAttacks.Count == 0)
+            {
+                return HelperSelectRandom(context.enemyData.Attacks); // Fallback to a random attack if no valid attacks found
+            }
+            // Select a random attack from the valid attacks
+            return HelperSelectRandomByWeight(validAttacks.ToArray());
+        }
+
+        /// <summary>
+        /// If the attack selection mode is RandomAmongValid, this method will select a random attack that can hit the player.
+        /// </summary>
+        /// <returns>Randomly selected attack that can hit the player</returns>
+        private EnemyAttackData SelectRandomAmongValidAttack()
+        {
+            List<EnemyAttackData> validAttacks = context.enemyData.Attacks
+                .Where(a => WillAttackHit(a))
+                .ToList();
+            if (validAttacks.Count == 0)
+            {
+                return HelperSelectRandom(context.enemyData.Attacks); // Fallback to a random attack if no valid attacks found
+            }
+            return validAttacks[Random.Range(0, validAttacks.Count)];
+        }
+
+
+        /// <summary>
+        /// If the attack selection mode is WeighedRandom, this method will select a random attack that can hit the player.
+        /// </summary>
+        /// <returns>Randomly selected attack based on weights</returns>
+        private EnemyAttackData SelectWeightedRandomAttack()
+        {
+            EnemyAttackData[] attacks = context.enemyData.Attacks;
+            return HelperSelectRandomByWeight(attacks);
+        }
+
+        /// <summary>
+        /// If the attack selection mode is FirstValidByWeight, this method will select the first valid attack that can hit the player ordered by weight.
+        /// </summary>
+        /// <returns>First valid attack sorted by weight</returns>
+        private EnemyAttackData SelectFirstValidAttackByWeight()
+        {
+            List<EnemyAttackData> attacks = context.enemyData.Attacks.ToList();
+            attacks.OrderByDescending(a => a.Weight);
+            foreach (EnemyAttackData attack in attacks)
+            {
+                if (attack.TargetType == AttackTargetType.RandomLane) return attack; // Random lane attacks can always be selected
+                if (WillAttackHit(attack))
+                {
+                    return attack; // Return the first attack that can hit the player
+                }
+            }
+            // fallback to first attack if none match
+            return attacks.FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Helper method to select a random attack based on weights.
+        /// </summary>
+        /// <param name="attacks">Enemy Attacks passed by caller</param>
+        /// <returns>Randomly selected attack by weight</returns>
+        private EnemyAttackData HelperSelectRandomByWeight(EnemyAttackData[] attacks) {
+            if (attacks == null || attacks.Length == 0)
+            {
+                Debug.LogError("No attacks available for selection");
+                return null;
+            }
+            float totalWeight = 0f;
+
+            foreach (var attack in attacks)
+            {
+                totalWeight += attack.Weight;
+            }
+
+            float randomValue = Random.Range(0f, totalWeight);
+
+            foreach (var attack in attacks)
+            {
+                if (randomValue < attack.Weight)
+                {
+                    return attack;
+                }
+                randomValue -= attack.Weight;
+            }
+
+            Debug.LogError("Error in weighted attack selection");
+            return null;
+        }
+
+        private EnemyAttackData HelperSelectRandom(EnemyAttackData[] attacks)
+        {
+            if (attacks == null || attacks.Length == 0)
+            {
+                Debug.LogError("No attacks available for selection");
+                return null;
+            }
+            int randomIndex = Random.Range(0, attacks.Length);
+            return attacks[randomIndex];
+        }
+
+        private bool WillAttackHit(EnemyAttackData data)
+        {
+            int[] attackOffsets = data.TargetOffset;
+            int current_lane = ((int)context.currentLane);
+            int player_lane = context.GetPlayerLaneIndex();
+
+            int[] validLanes = new int[attackOffsets.Length];
+            for (int i = 0; i < validLanes.Length; i++) { validLanes[i] = -1; }
+            for (int i = 0; i < attackOffsets.Length; i++)
+            {
+                validLanes[i] = current_lane + attackOffsets[i];
+            }
+            // Check if the player's lane is in the valid lanes
+            foreach (int lane in validLanes)
+            {
+                if (lane == player_lane)
+                {
+                    return true; // Attack will hit the player
+                }
+            }
+            return false; // Attack will not hit the player
+        }
+
+    }
 }

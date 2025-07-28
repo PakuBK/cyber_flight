@@ -16,7 +16,7 @@ public class SpecialAbility
         specialPrefab = _specialPrefab;
         Data = _data;
 
-        specialPrefab.GetComponent<SpecialController>().currentData = _data;
+        specialPrefab.GetComponent<SpecialController>().specialData = _data;
 
         startTime = -Data.Cooldown;
     }

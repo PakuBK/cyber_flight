@@ -366,10 +366,14 @@ GameObject:
   m_Component:
   - component: {fileID: 268765135}
   - component: {fileID: 268765134}
-  - component: {fileID: 268765132}
   - component: {fileID: 268765131}
   - component: {fileID: 268765136}
   - component: {fileID: 268765133}
+  - component: {fileID: 268765138}
+  - component: {fileID: 268765137}
+  - component: {fileID: 268765132}
+  - component: {fileID: 268765130}
+  - component: {fileID: 268765139}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -377,6 +381,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &268765130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 268765129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b74c92adf7733994592e19d512d16df3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!95 &268765131
 Animator:
   serializedVersion: 3
@@ -405,17 +421,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 268765129}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e10cb45b798d5c74d931cd0354558d21, type: 3}
+  m_Script: {fileID: 11500000, guid: a282af902b80f1d44b0b469ffe5b12f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Data: {fileID: 11400000, guid: b4a7ca283061a9e41834b31fd5276195, type: 2}
-  laneAnchorPoints: []
-  currentLane: 0
-  PlayerController: {fileID: 986261174}
-  HitColor: {r: 1, g: 0.006289184, b: 0.006289184, a: 0.9411765}
-  SlowColor: {r: 0, g: 0.98, b: 1, a: 1}
-  StunColor: {r: 0.7830189, g: 0.21175976, b: 0.65820956, a: 1}
-  enemyMaterial: {fileID: 0}
 --- !u!61 &268765133
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -517,6 +525,44 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b981871ee04330b49bf0e2d2a1cd698d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &268765137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 268765129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 082f33daf77e1694894347a3682e80a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &268765138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 268765129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f28290ec571676d4e8c0368d56901805, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyManager: {fileID: 1665763516}
+  playerLaneController: {fileID: 986261174}
+--- !u!114 &268765139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 268765129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45ed60f38fc2f854e8f7c9154273e6b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &276302126
@@ -4545,7 +4591,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsDebug: 1
   attackData: {fileID: 11400000, guid: 4281e64f2c375dc4f86affdc781886e4, type: 2}
-  specialData: {fileID: 11400000, guid: c825973ce6c85af42a440435033e6980, type: 2}
+  specialData: {fileID: 11400000, guid: 4c01b5d44ca6e034cb18ba79aa789c08, type: 2}
   specialPrefab: {fileID: 1279263776144306979, guid: 9183bf97c964c4745a779c9aef1b8071, type: 3}
   IsShooting: 0
   locked: 0
@@ -7112,7 +7158,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b4a7ca283061a9e41834b31fd5276195, type: 2}
   - {fileID: 11400000, guid: 2fbbd90c3da265a40a47021118138c9a, type: 2}
   player: {fileID: 986261167}
-  brain: {fileID: 268765132}
 --- !u!20 &1750508733 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 4115200648471848099, guid: d7b892ada46d3d44c9cc075981fdd85d, type: 3}

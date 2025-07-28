@@ -61,17 +61,20 @@ public class ObjectPooler : MonoBehaviour
         }
     }
 
-    public void InstantiateBulletsDelayed(BulletData[] _bullets, Transform _origin, bool fromEnemy=false){
-        StartCoroutine(ExecuteDelayedBulletSpawn(_bullets, _origin, fromEnemy));
+    public void InstantiateBulletsDelayed(BulletData[] _bullets, Transform _origin, System.Action onComplete, bool fromEnemy=false)
+    {
+        StartCoroutine(ExecuteDelayedBulletSpawn(_bullets, _origin, onComplete, fromEnemy));
     }
 
-    private IEnumerator ExecuteDelayedBulletSpawn(BulletData[] _bullets, Transform _origin, bool fromEnemy=false) {
+    private IEnumerator ExecuteDelayedBulletSpawn(BulletData[] _bullets, Transform _origin, System.Action onComplete, bool fromEnemy=false)
+    {
         foreach (BulletData bullet in _bullets)
         {
             bullet.FromEnemy = fromEnemy;
             yield return new WaitForSeconds(bullet.delayTime);
             InstantiateBullet(bullet, _origin.position);
         }
+        onComplete?.Invoke();
     }
 
     public void InstantiateSpecificPrefab(GameObject _obj, Vector3 _pos)
