@@ -16,13 +16,14 @@ MonoBehaviour:
   Icon: {fileID: 21300000, guid: 818b215161efa114d9a09c7c8b7918ec, type: 3}
   Health: 50
   MoveSpeed: 15
-  IdleTime: 0.1
+  PlayerFocusWeight: 12
+  AttackProbability: 70
+  IdleWaitMin: 0.5
+  IdleWaitMax: 1.5
   ShardsMin: 10
   ShardsMax: 20
   FragmentTier: 1
   FragmentAmount: 3
-  PlayerFocusWeight: 12
-  AttackProbabilty: 30
   IdleAnim: {fileID: 7400000, guid: a4480f529147517458f9a576adf6860b, type: 2}
   MoveAnim: {fileID: 7400000, guid: a4480f529147517458f9a576adf6860b, type: 2}
   DeathAnim: {fileID: 7400000, guid: b774abe0e6a53e9448997642f3dc68ad, type: 2}

@@ -4,7 +4,7 @@ using CF.Particles;
 namespace CF.Player {
 public class SpecialController : MonoBehaviour
 {
-    public SpecialData currentData;
+    public SpecialData specialData;
 
     private Rigidbody2D rb;
     private Transform enemy;
@@ -59,7 +59,7 @@ public class SpecialController : MonoBehaviour
 
     private void OnEnable()
     {
-        InitializeSpecial(currentData);
+        InitializeSpecial(specialData);
 
         spriteRenderer.sprite = Apperance;
 

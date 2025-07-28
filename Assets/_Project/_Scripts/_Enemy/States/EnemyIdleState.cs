@@ -11,6 +11,7 @@ namespace CF.Enemy {
         public override void Enter()
         {
             base.Enter();
+            Debug.Log("EnemyIdleState: Entering Idle State");
             waitTime = Random.Range(context.enemyData.IdleWaitMin, context.enemyData.IdleWaitMax);
             startTime = Time.time;
         }
@@ -18,6 +19,14 @@ namespace CF.Enemy {
         public override void LogicUpdate()
         {
             base.LogicUpdate();
+
+            // Check for stun, transition to interrupt state if stunned
+            if (context.HasActiveEffect(StatusEffect.Stunned))
+            {
+                base.Exit();
+                stateMachine.EnterState(EnemyStateType.Interrupt);
+                return;
+            }
 
             if (Time.time >= startTime + waitTime)
             {

@@ -1,4 +1,5 @@
 using CF.Data;
+using CF.Player;
 using UnityEngine;
 
 namespace CF.Enemy
@@ -9,10 +10,13 @@ namespace CF.Enemy
     /// </summary>
     public class EnemyContext : MonoBehaviour
     {
-        public Transform transform { get; private set; }
         public SpriteRenderer spriteRenderer { get; private set; }
 
+        [SerializeField]
         private EnemyManager enemyManager;
+
+        [SerializeField]
+        private LaneController playerLaneController;
 
         private EnemyStatusEffectHandler statusEffectHandler;
 
@@ -28,16 +32,20 @@ namespace CF.Enemy
         {
             Initialize();
         }
-        public void Initialize()
+        private void Initialize()
         {
-            enemyManager = GetComponent<EnemyManager>();
             statusEffectHandler = GetComponent<EnemyStatusEffectHandler>();
             movementController = GetComponent<EnemyMovementController>();
-            transform = GetComponent<Transform>();
             spriteRenderer = GetComponent<SpriteRenderer>();
             currentLane = Lane.Middle;
         }
 
+        /// <summary>
+        /// Checks if the enemy has an active status effect.
+        /// </summary>
+        /// <remarks>Checks status effect via the StatusEffectHandler Component.</remarks>
+        /// <param name="effect">Type of the Status Effect to be applied.</param>
+        /// <returns>True if the enemy has this effect.</returns>
         public bool HasActiveEffect(StatusEffect effect)
         {
             return statusEffectHandler.HasActiveEffect(effect);
@@ -46,6 +54,11 @@ namespace CF.Enemy
         public void SetCurrentLane(Lane lane)
         {
             currentLane = lane;
+        }
+
+        public int GetPlayerLaneIndex()
+        {
+            return playerLaneController.CurrentLane;
         }
 
     }

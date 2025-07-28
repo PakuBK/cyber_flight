@@ -1,6 +1,7 @@
 using CF.Player;
 using CF.UI;
 using UnityEngine;
+using System;
 
 namespace CF.Enemy
 {
@@ -10,12 +11,9 @@ namespace CF.Enemy
         public override void Enter()
         {
             base.Enter();
-            UIController.current.ShowVersusUI(
-                context.enemyData.Icon,
-                context.enemyData.Icon,
-                "test",
-                OnUIAnimationComplete
-            );
+            // UIController.current.ShowVersusUI( context.enemyData.Icon,context.enemyData.Icon,"test",OnUIAnimationComplete);
+            // DEBUG
+            Exit();
         }
 
         private void OnUIAnimationComplete()

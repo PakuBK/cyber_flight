@@ -7,12 +7,6 @@ namespace CF.Enemy {
         private float[] laneAnchorPoints { get; set; }
         private float moveSpeed => context.enemyData.MoveSpeed;
 
-        private int targetLaneIndex = -1;
-        private bool isMoving = false;
-        private bool isInterrupted = false;
-
-        
-
         private void Awake()
         {
             context = GetComponent<EnemyContext>();
@@ -30,21 +24,6 @@ namespace CF.Enemy {
             transform.position = pos;
 
             return Mathf.Abs(pos.x - targetX) < 0.01f;
-        }
-
-        public void InterruptMovement()
-        {
-            isInterrupted = true;
-            isMoving = false;
-        }
-
-        public void ResumeMovement()
-        {
-            if (targetLaneIndex >= 0)
-            {
-                isMoving = true;
-                isInterrupted = false;
-            }
         }
 
         public bool IsAtLane(int laneIndex)

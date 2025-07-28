@@ -26,6 +26,23 @@ namespace CF.Enemy {
             currentState.Enter();
         }
 
+        private void Update()
+        {
+            if (currentState != null)
+            {
+                currentState.LogicUpdate();
+            }
+        }
+
+        private void FixedUpdate()
+        {
+            if (currentState != null)
+            {
+                currentState.PhysicsUpdate();
+            }
+        }
+
+
         public void Initialize()
         {
             this.context = GetComponent<EnemyContext>();

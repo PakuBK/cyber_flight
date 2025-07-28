@@ -6,6 +6,7 @@ using CF.Data;
 namespace CF.Enemy {
     public class EnemyManager : MonoBehaviour
     {
+        [SerializeField]
         public EnemyData[] enemys;
 
         [SerializeField]
@@ -32,10 +33,9 @@ namespace CF.Enemy {
         {
             stateMachine = GetComponent<EnemyStateMachine>();
             context = GetComponent<EnemyContext>();
-            stateMachine.Initialize();
 
             Sprite playerSprite = player.GetComponent<InteractionHandler>().data.Icon; // May break, gets current used Sprite.
-            UIController.current.ShowVersusUI(playerSprite, enemys[currentEnemy].Icon, enemys[currentEnemy].Name);
+            //UIController.current.ShowVersusUI(playerSprite, enemys[currentEnemy].Icon, enemys[currentEnemy].Name);
 
         }
 

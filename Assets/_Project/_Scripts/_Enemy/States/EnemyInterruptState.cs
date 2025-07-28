@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace CF.Enemy
 {
     public class EnemyInterruptState : EnemyState
@@ -6,8 +8,8 @@ namespace CF.Enemy
 
         public override void Enter()
         {
+            UnityEngine.Debug.Log("EnemyInterruptState: Entering state");
             base.Enter();
-
         }
 
         public override void LogicUpdate()

@@ -35,7 +35,5 @@ namespace CF.Enemy {
         {
         
         }
-
-  
-}
+    }
 }

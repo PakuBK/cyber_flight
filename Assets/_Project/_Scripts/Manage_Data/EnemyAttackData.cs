@@ -1,5 +1,6 @@
 using UnityEngine;
 using CF.Audio;
+using System.ComponentModel;
 
 namespace CF.Data {
     public enum EnemyAttackType
@@ -16,18 +17,31 @@ namespace CF.Data {
         Random
     }
 
+    public enum AttackTargetType
+    {
+        SingleLane,
+        TwoLanes,
+        RandomLane
+    }
+
     [CreateAssetMenu(fileName = "Enemy Attack Data", menuName = "Data/Enemys/Attacks")]
     public class EnemyAttackData : ScriptableObject
     {
         [Header("General")]
         public EnemyAttackType AttackType = EnemyAttackType.Bullet;
 
-        [Header("Attack Settings")]
-        public int[] AttackTargetOffset = {0};
+        [Header("Target Settings")]
+        [Range(-1, 1)]
+        [Tooltip("The lanes that this attack will hit relativ to the player. -1 = left, 0 = middle, 1 = right")]
+        public int[] TargetOffset = {0};
+        [Tooltip("How many Lanes will this attack effect")]
+        public AttackTargetType TargetType = AttackTargetType.SingleLane;
+        [Range(1, 10)]
+        public int Weight = 1;
 
 
         [Header("Telegraph Settings")]
-        public float TelegraphDuration = 1f;
+        public float TelegraphDuration = 0.5f;
 
         [Header("Bullet Settings")]
         public BulletCycleType BulletIteration = BulletCycleType.Singel;
@@ -45,8 +59,7 @@ namespace CF.Data {
         public float LaserDamagePerSecond = 10f;
         public int LaserTargetLane = 1;
 
-        [Range(1,10)]
-        public float Weight = 1;
+        
 
         [Header("SFX")]
         public AudioOfType[] AttackSFX;

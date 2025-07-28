@@ -14,15 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Butterfly
   Icon: {fileID: 21300000, guid: 853b1c43e7a9a094a8db840ceb1664b9, type: 3}
-  Health: 25
+  Health: 100
   MoveSpeed: 12
-  IdleTime: 0.25
+  PlayerFocusWeight: 77
+  AttackProbability: 100
+  IdleWaitMin: 0.5
+  IdleWaitMax: 0.6
   ShardsMin: 5
   ShardsMax: 10
   FragmentTier: 0
   FragmentAmount: 2
-  PlayerFocusWeight: 15
-  AttackProbabilty: 50
   IdleAnim: {fileID: 7400000, guid: 8db3af4f281fac942927e6dbf5b399cc, type: 2}
   MoveAnim: {fileID: 7400000, guid: 8db3af4f281fac942927e6dbf5b399cc, type: 2}
   DeathAnim: {fileID: 7400000, guid: 4d964438910e9e149a371c16b25e4ff4, type: 2}
@@ -31,6 +32,4 @@ MonoBehaviour:
   ExitClip: {fileID: 7400000, guid: 3b000c99c6bf32a45ba9db8916f624e8, type: 2}
   HitColor: {r: 1, g: 1, b: 1, a: 1}
   Attacks:
-  - {fileID: 11400000, guid: 376a6a14048d9ba4d8e382af1e047a0a, type: 2}
-  - {fileID: 11400000, guid: 958cf74a646e8d14eb77e06adcae28b7, type: 2}
-  - {fileID: 11400000, guid: cfc5e6234064d6346aef1f3ee7dc5609, type: 2}
+  - {fileID: 11400000, guid: 7e0022fbecfee2d40b34d868317701f1, type: 2}

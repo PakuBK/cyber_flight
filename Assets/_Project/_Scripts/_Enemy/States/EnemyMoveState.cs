@@ -12,13 +12,22 @@ namespace CF.Enemy {
 
         public override void Enter()
         {
+            Debug.Log("EnemyMoveState: Entering Move State");
             base.Enter();
-            int currentLaneIndex = (int) context.currentLane;
+            int currentLaneIndex = (int)context.currentLane;
 
+            // Ensure Enemy is at a lane before moving
             if (movementController.IsAtLane(currentLaneIndex))
             {
-                do { targetLaneIndex = Random.Range(0, 4); } while (targetLaneIndex == currentLaneIndex);
+                if (Random.Range(0, 100) < context.enemyData.PlayerFocusWeight) {
+                    targetLaneIndex = context.GetPlayerLaneIndex();
+                }
+                else
+                {
+                    do { targetLaneIndex = Random.Range(0, 3); } while (targetLaneIndex == currentLaneIndex);
+                }  
             }
+            // If the enemy is not at a lane, find the nearest lane index
             else
             {
                 targetLaneIndex = movementController.GetNearestLaneIndex();
@@ -60,6 +69,6 @@ namespace CF.Enemy {
             }
         }
 
-    
+        
     }
 }
